@@ -1,6 +1,7 @@
 from os import truncate
 import sys
 from colorama.ansi import Fore
+from colorama.initialise import reinit
 from gvm.connections import UnixSocketConnection
 from gvm.errors import GvmError
 from gvm.protocols.gmp import Gmp
@@ -80,6 +81,7 @@ if goal == 1:
     for i in all_cred.findall('credential'):
         if i[1].text==name_cred:
             cred_id = i.get('id')
+            print(cred_id)
     print('--------------------------------------------------------------')
     #---------------------------------------------------------------------
     # create port list
@@ -102,7 +104,7 @@ if goal == 1:
             snmp_credential_id=cred_id,
             port_range= input('Enter port range : ')
         )
-        danial_target_id = t.xpath('@id')[0]
+        my_target_id = t.xpath('@id')[0]
     else:
         print(Fore.CYAN+'create target')
         t=gmp.create_target(
@@ -111,7 +113,7 @@ if goal == 1:
             hosts= [input('Enter hosts : ')],
             port_range= input('Enter port range : ')
         )
-        danial_target_id = t.xpath('@id')[0]
+        my_target_id = t.xpath('@id')[0]
     print('--------------------------------------------------------------')
     #-----------------------------------------------------------------------
     # create task
@@ -123,35 +125,35 @@ if goal == 1:
     if type_scanner == 1 and scan_config == 1:
         res=gmp.create_task(
             name= input(Fore.WHITE+'Enter name of task :'),
-            target_id= danial_target_id,
+            target_id= my_target_id,
             scanner_id= '08b69003-5fc2-4037-a479-93b440211c73',
             config_id= 'd21f6c81-2b88-4ac1-b7b4-a2a9f2ad4663'
         )
     elif type_scanner == 1 and scan_config == 2:
         res=gmp.create_task(
             name= input(Fore.WHITE+'Enter name of task :'),
-            target_id= danial_target_id,
+            target_id= my_target_id,
             scanner_id= '08b69003-5fc2-4037-a479-93b440211c73',
             config_id= '8715c877-47a0-438d-98a3-27c7a6ab2196'
         )
     elif type_scanner == 1 and scan_config == 3:
         res=gmp.create_task(
             name= input(Fore.WHITE+'Enter name of task :'),
-            target_id= danial_target_id,
+            target_id= my_target_id,
             scanner_id= '08b69003-5fc2-4037-a479-93b440211c73',
             config_id= 'daba56c8-73ec-11df-a475-002264764cea'
         )
     elif type_scanner == 1 and scan_config == 4:
         res=gmp.create_task(
             name= input(Fore.WHITE+'Enter name of task :'),
-            target_id= danial_target_id,
+            target_id= my_target_id,
             scanner_id= '08b69003-5fc2-4037-a479-93b440211c73',
             config_id= '2d3f051c-55ba-11e3-bf43-406186ea4fc5'
         )
     elif type_scanner == 1 and scan_config == 5:
         res=gmp.create_task(
             name= input(Fore.WHITE+'Enter name of task :'),
-            target_id= danial_target_id,
+            target_id= my_target_id,
             scanner_id= '08b69003-5fc2-4037-a479-93b440211c73',
             config_id= 'bbca7412-a950-11e3-9109-406186ea4fc5'
         )
@@ -159,35 +161,35 @@ if goal == 1:
     elif type_scanner == 2 and scan_config == 1:
         res=gmp.create_task(
             name= input(Fore.WHITE+'Enter name of task :'),
-            target_id= danial_target_id,
+            target_id= my_target_id,
             scanner_id= '6acd0832-df90-11e4-b9d5-28d24461215b',
             config_id= 'd21f6c81-2b88-4ac1-b7b4-a2a9f2ad4663'
         )
     elif type_scanner == 2 and scan_config == 2:
         res=gmp.create_task(
             name= input(Fore.WHITE+'Enter name of task :'),
-            target_id= danial_target_id,
+            target_id= my_target_id,
             scanner_id= '6acd0832-df90-11e4-b9d5-28d24461215b',
             config_id= '8715c877-47a0-438d-98a3-27c7a6ab2196'
         )
     elif type_scanner == 2 and scan_config == 3:
         res=gmp.create_task(
             name= input(Fore.WHITE+'Enter name of task :'),
-            target_id= danial_target_id,
+            target_id= my_target_id,
             scanner_id= '6acd0832-df90-11e4-b9d5-28d24461215b',
             config_id= 'daba56c8-73ec-11df-a475-002264764cea'
         )
     elif type_scanner == 2 and scan_config == 4:
         res=gmp.create_task(
             name= input(Fore.WHITE+'Enter name of task :'),
-            target_id= danial_target_id,
+            target_id= my_target_id,
             scanner_id= '6acd0832-df90-11e4-b9d5-28d24461215b',
             config_id= '2d3f051c-55ba-11e3-bf43-406186ea4fc5'
         )
     elif type_scanner == 2 and scan_config == 5:
         res=gmp.create_task(
             name= input(Fore.WHITE+'Enter name of task :'),
-            target_id= danial_target_id,
+            target_id= my_target_id,
             scanner_id= '6acd0832-df90-11e4-b9d5-28d24461215b',
             config_id= 'bbca7412-a950-11e3-9109-406186ea4fc5'
         )
@@ -221,6 +223,15 @@ if goal == 1:
             with open(report_name , 'w') as file:           
                 file.write(str(b_xml))      #for save in your device
             break
+    gmp.delete_task(
+    task_id=task_id
+    )
+    gmp.delete_target(
+        target_id=my_target_id
+    )
+    gmp.delete_credential(
+        credential_id=cred_id
+    )
 elif goal == 2:
     report_open_name = input('which report do yo see? ')
     with open('/root/'+report_open_name , 'r') as rep:
